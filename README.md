@@ -207,3 +207,42 @@ exercises-# from cd.facilities;
 ```
 The `AS` operator is *very* useful in labeling columns or expressions, not only for display purposes, but also for easy reference.
 
+
+Question :   
+How can you produce a list of members who joined after the start of September 2012? Return the memid, surname, firstname, and joindate of the members in question.   
+`exercises=# select memid, surname, firstname, joindate from cd.members where joindate >= '2012-09-01';`
+
+
+Question :   
+How can you produce an ordered list of the first 10 surnames in the members table? The list must not contain duplicates.   
+`exercises=# select distinct surname from cd.members order by surname desc limit 10;`
+
+Question :   
+You, for some reason, want a combined list of all surnames and all facility names. Yes, this is a contrived example :-). Produce that list!    
+`exercises=# select surname from cd.members union select name from cd.facilities;`
+
+UNION combines the results of two queries into a single table. Both results must have the same number of columns and compatible data types. UNION removes duplicate rows, unlike UNION ALL.
+
+Question :   
+You'd like to get the signup date of your last member. How can you retrieve this information?    
+`exercises=# select max(joindate) as latest_join from cd.members;`
+
+Question :   
+You'd like to get the first and last name of the last member(s) who signed up - not just the date. How can you do that?    
+```
+exercises=# select firstname, surname, joindate from cd.members 
+exercises=# where joindate = (select max(joindate) from cd.members);
+```
+
+I found out that returnins `AS latest` and using this reference to filter didn't work. One other approach would be 
+```
+exercises=# select firstname, surname, joindate from cd.members
+exercises=# order by joindate desc
+exercises=# limit 1;
+```
+
+
+
+
+
+
