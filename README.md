@@ -29,7 +29,7 @@ The local setting-up of the database can be found on the bottom of this readme
 
 ## Chapter 1 - Basics
 Let's go and work through the "Basics" section!  
-It covers the basic `SQL Statements`, SELECT/WHERE, LIKE, IN, CASE, DISTINCT, ORDER BY, LIMIT, UNION, MIN/MAX.    
+It covers the basic `SQL Statements`, `SELECT/WHERE`, `LIKE`, `IN`, `CASE`, `DISTINCT`, `ORDER BY`, `LIMIT`, `UNION`, `MIN/MAX`.    
 
 * Retrieve everything from a table
 * Retrieve specific columns from a table
@@ -45,7 +45,7 @@ It covers the basic `SQL Statements`, SELECT/WHERE, LIKE, IN, CASE, DISTINCT, OR
 * More aggregation
 
 
-Question :
+Question :   
 How can you retrieve all the information from the cd.facilities table?    
 `exercises=# select * from cd.facilities;`
 
@@ -59,13 +59,15 @@ How can you produce a list of facilities that charge a fee to members?
 `exercises=# select name, membercost from cd.facilities where membercost > 0;`
 
 Question :   
-How can you produce a list of facilities that charge a fee to members, and that fee is less than 1/50th of the monthly maintenance cost? Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.    
-`exercises=# select facid, name, membercost, monthlymaintenance from cd.facilities where membercost >0 and membercost*50 < monthlymaintenance;`
-We need to *charge* a fee, as well as that condition.
+How can you produce a list of facilities *that charge a fee* to members, and *that fee* is less than 1/50th of the monthly maintenance cost? Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.    
+```sql 
+exercises=# select facid, name, membercost, monthlymaintenance from cd.facilities 
+exercises=# where membercost >0 and membercost*50 < monthlymaintenance;
+```
 
 Question :   
 How can you produce a list of all facilities with the word 'Tennis' in their name?   
-`exercises=# select * from cd.facilities where name like '%Tennis%';`
+`exercises=# select * from cd.facilities where name like '%Tennis%';`    
 Remember, `_` matches single characters, and `%` matches any strings.
 
 Question :    
@@ -125,7 +127,7 @@ exercises=# select firstname, surname, joindate from cd.members
 exercises=# where joindate = (select max(joindate) from cd.members);
 ```
 
-I found out that returnins `AS latest` and using this reference to filter didn't work. One other approach would be 
+I found out that, returning the max(joindate) `AS latest` and using this reference to filter didn't work. One other approach would be 
 ```
 exercises=# select firstname, surname, joindate from cd.members
 exercises=# order by joindate desc
@@ -136,7 +138,7 @@ exercises=# limit 1;
 
 
 
-### Setting it up..!
+### Appendix : Setting it up..!
 First of all, I created a new user `paschalis` using 
 ```sql
 CREATE USER paschalis with password '123456' valid until 'infinity';
@@ -155,15 +157,9 @@ REVOKE ALL PRIVILEGES ON SCHEMA PUBLIC FROM paschalis;
 ```
 
 
-
-
-
-
-
-
 I then re-created the database from the `.sql` dump, using the superuser `postgres`
 
-```
+```sql
 $ psql -U postgres -f clubdata.sql -x
 Password for user postgres: 
 CREATE DATABASE
