@@ -19,13 +19,13 @@ Here's an account of me solving [pgexercises](https://pgexercises.com).
 I set up PosgreSQL on my Ubuntu 14.04 machine using the official documentation from [here](https://www.postgresql.org/download/linux/ubuntu/), and downloaded the pgexercises database from [here](https://pgexercises.com/dbfiles/clubdata.sql).
 The local setting-up of the database can be found on the bottom of this readme
 
-- [ x ] Basics.
-- [   ] Joins.
-- [   ] Updates.
-- [   ] Aggregates.
-- [   ] Date.
-- [   ] String.
-- [   ] Recursive.
+- [x] Basics.
+- [ ] Joins.
+- [ ] Updates.
+- [ ] Aggregates.
+- [ ] Date.
+- [ ] String.
+- [ ] Recursive.
 
 ## Chapter 1 - Basics
 Let's go and work through the "Basics" section!  
