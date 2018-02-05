@@ -60,7 +60,7 @@ How can you produce a list of facilities that charge a fee to members?
 
 Question :   
 How can you produce a list of facilities *that charge a fee* to members, and *that fee* is less than 1/50th of the monthly maintenance cost? Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.    
-```sql 
+``` 
 exercises=# select facid, name, membercost, monthlymaintenance from cd.facilities 
 exercises=# where membercost >0 and membercost*50 < monthlymaintenance;
 ```
@@ -148,7 +148,7 @@ ALTER USER paschalis SET statement_timeout = 750;
 The [Getting Started](https://pgexercises.com/gettingstarted.html) page gives a detailed overview of the `tables` that exist in the database, namely the `members`, `facilities`, and `bookings` tables.
 The first thing I did was examine the database dump using `vim clubdata.sql`. I saw that it did not specify any users, so I added my newly created user to the `.sql` dump
 
-```
+```sql
 GRANT CONNECT ON DATABASE exercises TO paschalis;
 \c exercises
 CREATE SCHEMA cd;
