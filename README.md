@@ -136,6 +136,30 @@ exercises=# limit 1;
 
 
 
+## Chapter 2 - Joins and Subqueries
+Next up is a way to answer to more structurally complex questions, such as
+
+* Retrieve the start times of members' bookings
+* Work out the start times of bookings for tennis courts
+* Produce a list of all members who have recommended another member
+* Produce a list of all members, along with their recommender
+* Produce a list of all members who have used a tennis court
+* Produce a list of costly bookings
+* Produce a list of all members, along with their recommender, using no joins.
+* Produce a list of costly bookings, using a subquery
+
+
+Question :    
+How can you produce a list of the start times for bookings by members named 'David Farrell'?   
+```sql
+select bks.starttime
+	from cd.bookings bks
+	inner join cd.members mems
+	on mems.memd = bks.memid
+where mems.firstname = 'David'
+      mems.surname = 'Farell';
+```
+
 
 
 ### Appendix : Setting it up..!
