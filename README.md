@@ -47,42 +47,52 @@ It covers the basic `SQL Statements`, `SELECT/WHERE`, `LIKE`, `IN`, `CASE`, `DIS
 
 Question :   
 How can you retrieve all the information from the cd.facilities table?    
-`exercises=# select * from cd.facilities;`
+```sql
+select * from cd.facilities;
+```
 
 
 Question :    
 You want to print out a list of all of the facilities and their cost to members. How would you retrieve a list of only facility names and costs?   
-`exercises=# select name, membercost from cd.facilities;`
+```sql
+select name, membercost from cd.facilities;`
+```
 
 Question :    
 How can you produce a list of facilities that charge a fee to members?   
-`exercises=# select name, membercost from cd.facilities where membercost > 0;`
+```sql
+select name, membercost from cd.facilities where membercost > 0;
+```
 
 Question :   
 How can you produce a list of facilities *that charge a fee* to members, and *that fee* is less than 1/50th of the monthly maintenance cost? Return the facid, facility name, member cost, and monthly maintenance of the facilities in question.    
-``` 
-exercises=# select facid, name, membercost, monthlymaintenance from cd.facilities 
-exercises=# where membercost >0 and membercost*50 < monthlymaintenance;
+```sql 
+select facid, name, membercost, monthlymaintenance from cd.facilities 
+where membercost >0 and membercost*50 < monthlymaintenance;
 ```
 
 Question :   
 How can you produce a list of all facilities with the word 'Tennis' in their name?   
-`exercises=# select * from cd.facilities where name like '%Tennis%';`    
-Remember, `_` matches single characters, and `%` matches any strings.
+```sql
+select * from cd.facilities where name like '%Tennis%';
+```    
+Reminder, `_` matches single characters, and `%` matches any strings.
 
 Question :    
 How can you retrieve the details of facilities with ID 1 and 5? Try to do it without using the OR operator.    
-`exercises=# select * from cd.facilities where facid in (1, 5);`
+```sql
+select * from cd.facilities where facid in (1, 5);
+```
 
 Question :  
 How can you produce a list of facilities, with each labelled as 'cheap' or 'expensive' depending on if their monthly maintenance cost is more than $100? Return the name and monthly maintenance of the facilities in question.   
-```
-exercises=# select name, facid,
-exercises-# case
-exercises-#    when (monthlymaintenance > 100) then 'expensive'
-exercises-#    when (monthlymaintenance < 100) then 'cheap'
-exercises-# end as cost
-exercises-# from cd.facilities;
+```sql
+select name, facid,
+case
+   when (monthlymaintenance > 100) then 'expensive'
+   when (monthlymaintenance < 100) then 'cheap'
+end as cost
+from cd.facilities;
 
       name       | facid |   cost    
 -----------------+-------+-----------
@@ -103,36 +113,45 @@ The `AS` operator is *very* useful in labeling columns or expressions, not only 
 
 Question :   
 How can you produce a list of members who joined after the start of September 2012? Return the memid, surname, firstname, and joindate of the members in question.   
-`exercises=# select memid, surname, firstname, joindate from cd.members where joindate >= '2012-09-01';`
+```sql
+select memid, surname, firstname, joindate from cd.members where joindate >= '2012-09-01';
+```
 
 
 Question :   
 How can you produce an ordered list of the first 10 surnames in the members table? The list must not contain duplicates.   
-`exercises=# select distinct surname from cd.members order by surname desc limit 10;`
+```sql
+select distinct surname from cd.members order by surname desc limit 10;
+```
 
 Question :   
 You, for some reason, want a combined list of all surnames and all facility names. Yes, this is a contrived example :-). Produce that list!    
-`exercises=# select surname from cd.members union select name from cd.facilities;`
+```sql
+select surname from cd.members union select name from cd.facilities;
+```
 
 UNION combines the results of two queries into a single table. Both results must have the same number of columns and compatible data types. UNION removes duplicate rows, unlike UNION ALL.
 
 Question :   
 You'd like to get the signup date of your last member. How can you retrieve this information?    
-`exercises=# select max(joindate) as latest_join from cd.members;`
+```sql
+select max(joindate) as latest_join from cd.members;
+```
 
 Question :   
 You'd like to get the first and last name of the last member(s) who signed up - not just the date. How can you do that?    
-```
-exercises=# select firstname, surname, joindate from cd.members 
-exercises=# where joindate = (select max(joindate) from cd.members);
+```sql
+select firstname, surname, joindate from cd.members 
+where joindate = (select max(joindate) from cd.members);
 ```
 
 I found out that, returning the max(joindate) `AS latest` and using this reference to filter didn't work. One other approach would be 
+```sql
+select firstname, surname, joindate from cd.members
+order by joindate desc
+limit 1;
 ```
-exercises=# select firstname, surname, joindate from cd.members
-exercises=# order by joindate desc
-exercises=# limit 1;
-```
+
 
 
 
