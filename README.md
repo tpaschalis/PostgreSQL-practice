@@ -20,7 +20,7 @@ I set up PosgreSQL on my Ubuntu 14.04 machine using the official documentation f
 The local setting-up of the database can be found on the bottom of this readme
 
 - [x] Basics.
-- [ ] Joins.
+- [x] Joins.
 - [ ] Updates.
 - [ ] Aggregates.
 - [ ] Date.
@@ -224,7 +224,66 @@ order by members.firstname, members.surname;
 Question :   
 How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost, and do not use any subqueries.    
 ```sql
-select members.firstname, members.surname, facilities.name
+select members.firstname, members.surname, facilities.name,
+case 
+	when members.memid = 0 then bookings.slots * facilities.guestcost
+	else bookings.slots * facilities.membercost
+end as cost
+from cd.members 
+	inner join cd.bookings on members.memid = bookings.memid
+	inner join cd.facilities on bookings.facid = facilities.facid
+where 
+bookings.starttime >= '2012-09-14' and bookings.starttime < '2012-09-15' and (
+(members.memid = 0 and bookings.slots*facilities.guestcost >= 30 ) or 
+(members.memid != 0 and bookings.slots*facilities.membercost >= 30) )
+order by cost desc;
+```
+
+
+Question :   
+How can you output a list of all members, including the individual who recommended them (if any), without using any joins? Ensure that there are no duplicates in the list, and that each firstname + surname pairing is formatted as a column and ordered.   
+```sql
+select 
+distinct members.firstname, members.surname, 
+(select recommender.firstname || ' ' || recommender.surname from cd.members recommender where recommender.memid = members.recommendedby)
+from cd.members 
+order by members.firstname, members.surname;
+```
+Reminder, subquery must return *one* column, that's why I concantenated the firstname/surname strings.
+
+
+
+Question :   
+The Produce a list of costly bookings exercise contained some messy logic: we had to calculate the booking cost in both the WHERE clause and the CASE statement. Try to simplify this calculation using subqueries. For reference, the question was:   
+
+How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost.   
+```sql
+
+```
+
+
+## Chapter 3 - Modifying data
+Okay, reading data from a database can range from pretty straightforward, to a total nightmare.   
+But when working with a real-world database, you deal with with inserting, updating, and deleting information. Let's work through questions as
+
+* Insert some data into a table
+* Insert multiple rows of data into a table
+* Insert calculated data into a table
+* Update some existing data
+* Update multiple rows and columns at the same time
+* Update a row based on the contents of another row
+* Delete all bookings
+* Delete a member from the cd.members table
+* Delete based on a subquery
+
+
+
+Question :   
+The club is adding a new facility - a spa. We need to add it into the facilities table. Use the following values:   
+facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.
+```sql
+insert into cd.facilities (facid, name, membercost, guestcost, initialoutlay, monthlymaintenance) 
+values (9, 'Spa', 20, 30, 100000, 800);
 ```
 
 
