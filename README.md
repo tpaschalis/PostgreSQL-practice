@@ -400,6 +400,29 @@ ORDER BY table_schema,table_name;
 (191 rows)
 ```
 
+To remove the restrictions on transactions and grant write privileges, you should, and so that other users can access and modify the table, one can
+
+```sql
+ grant all privileges on table cd.members to paschalis;
+ERROR:  cannot execute GRANT in a read-only transaction
+
+ begin;
+BEGIN
+ set transaction read write;
+SET
+ alter database exercises set default_transaction_read_only = off;
+ALTER DATABASE
+ commit;
+COMMIT
+
+  GRANT ALL PRIVILEGES ON TABLE cd.members TO paschalis;
+GRANT
+  GRANT ALL PRIVILEGES ON TABLE cd.facilities TO paschalis;
+GRANT
+  GRANT ALL PRIVILEGES ON TABLE cd.bookings TO paschalis;
+GRANT
+```
+
 
 The database has been recreated, and it all seems to be working okay! I can now just `psql -U paschalis -d exercises -x` from my shell to go on exploring the database!
 
