@@ -363,6 +363,38 @@ DELETE 0
 ```
 
 
+## Chapter 4 - Aggregates
+Aggregates allow to produce more complex queries, answering a whole different level of questions to help with decision making.   
+The questions I'll be going through are
+
+* Count the number of facilities
+* Count the number of expensive facilities
+* Count the number of recommendations each member makes.
+* List the total slots booked per facility
+* List the total slots booked per facility in a given month
+* List the total slots booked per facility per month
+* Find the count of members who have made at least one booking
+* List facilities with more than 1000 slots booked
+* Find the total revenue of each facility
+* Find facilities with a total revenue less than 1000
+* Output the facility id that has the highest number of slots booked
+* List the total slots booked per facility per month, part 2
+* List the total hours booked per named facility
+* List each member's first booking after September 1st 2012
+* Produce a list of member names, with each row containing the total member count
+* Produce a numbered list of members
+* Output the facility id that has the highest number of slots booked, again
+* Rank members by (rounded) hours used
+* Find the top three revenue generating facilities
+* Classify facilities by value
+* Calculate the payback time for each facility
+* Calculate a rolling average of total revenue
+
+
+
+
+
+
 
 ### Appendix : Setting it up..!
 First of all, I created a new user `paschalis` using 
