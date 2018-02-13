@@ -459,6 +459,46 @@ from cd.bookings;
 ```
 
 
+Question :   
+Produce a list of facilities with more than 1000 slots booked. Produce an output table consisting of facility id and hours, sorted by facility id.    
+```sql
+select facid, sum(slots)
+from cd.bookings
+group by facid
+having sum(slots) > 1000
+order by facid;
+```
+When you encounter `ERROR:  aggregate functions are not allowed in WHERE`, the funtion `HAVING` might be useful.
+
+
+
+Question :   
+Produce a list of facilities along with their total revenue. The output table should consist of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!    
+```sql
+select facilities.name, sum(slots*case when memid = 0 then facilities.guestcost else facilities.membercost end) as TotalMoney
+from cd.bookings
+inner join cd.facilities on bookings.facid = facilities.facid
+group by facilities.name
+order by TotalMoney;
+```
+
+Question :   
+Produce a list of facilities with a total revenue less than 1000. Produce an output table consisting of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!    
+```sql
+
+
+```
+One would try to just use the directly previous statement, plus the `HAVING` function! Well, this doesn't work, as `HAVING` 
+
+
+
+
+
+
+
+
+
+
 ### Appendix : Setting it up..!
 First of all, I created a new user `paschalis` using 
 ```sql
