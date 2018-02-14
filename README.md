@@ -493,7 +493,34 @@ One would try to just use the directly previous statement, plus the `HAVING` fun
 
 
 
+## Chapter 5 - Dates/Timestamps
 
+Working with real-world data, you will almost always deal with some kind of date and time data. Such data is also valuable for debugging purposes, and might be life-saving in disaster scenarios.
+
+To familiarize myself, I've answered questions such as  
+
+
+
+* Produce a timestamp for 1 a.m. on the 31st of August 2012
+* Subtract timestamps from each other
+* Generate a list of all the dates in October 2012
+* Get the day of the month from a timestamp
+* Work out the number of seconds between timestamps
+* Work out the number of days in each month of 2012
+* Work out the number of days remaining in the month
+* Work out the end time of bookings
+* Return a count of bookings for each month
+* Work out the utilisation percentage for each facility by month
+
+
+Question :   
+Produce a timestamp for 1 a.m. on the 31st of August 2012.    
+
+```sql
+select '2012-08-31 01:00:00'::timestamp;
+```
+I lie the approach of casting a formatted string to a timestamp this way.   
+One could also use something simpler like `select timestamp '2012-08-31 01:00:00';`
 
 
 
