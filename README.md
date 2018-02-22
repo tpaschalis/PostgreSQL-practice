@@ -485,11 +485,49 @@ order by TotalMoney;
 Question :   
 Produce a list of facilities with a total revenue less than 1000. Produce an output table consisting of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!    
 ```sql
-
-
+select name, totalrevenue from 
+(
+select facilities.name, 
+sum(case when memid = 0 then slots * facilities.guestcost else slots * membercost end) as totalrevenue
+from cd.bookings
+inner join cd.facilities 
+on cd.bookings.facid = cd.facilities.facid
+group by facilities.name
+)
+as selected_facilities where totalrevenue <= 1000
+order by totalrevenue;
 ```
-One would try to just use the directly previous statement, plus the `HAVING` function! Well, this doesn't work, as `HAVING` 
+One would try to just use the directly previous statement, plus the `HAVING` function! Well, this doesn't work, as the `HAVING` does not support column names.
 
+Question :   
+ Output the facility id that has the highest number of slots booked. For bonus points, try a version without a LIMIT clause. This version will probably look messy!   
+
+```sql
+select facid, sum(slots)
+from cd.bookings group by facid
+order by sum(slots) desc
+limit 2;
+```
+I couldn't get `TOP` to work, but I didn't look more into it.
+
+Question :   
+
+Produce a list of the total number of slots booked per facility per month in the year of 2012. In this version, include output rows containing totals for all months per facility, and a total for all months for all facilities. The output table should consist of facility id, month and slots, sorted by the id and month. When calculating the aggregated values for all months and all facids, return null values in the month and facid columns.    
+
+```sql
+select facid, extract(month from starttime) as month, sum(slots)
+from cd.bookings
+where starttime >= '2012-01-01'
+and starttime <= '2013-01-01'
+group by rollup(facid, month)
+order by facid, month;
+```
+
+Question :   
+Produce a list of the total number of hours booked per facility, remembering that a slot lasts half an hour. The output table should consist of the facility id, name, and hours booked, sorted by facility id. Try formatting the hours to two decimal places.    
+
+```sql
+```
 
 
 
@@ -524,145 +562,6 @@ One could also use something simpler like `select timestamp '2012-08-31 01:00:00
 
 
 
-
-
-### Appendix : Setting it up..!
-First of all, I created a new user `paschalis` using 
-```sql
-CREATE USER paschalis with password '123456' valid until 'infinity';
-ALTER USER paschalis SET statement_timeout = 750;
-```
-
-The [Getting Started](https://pgexercises.com/gettingstarted.html) page gives a detailed overview of the `tables` that exist in the database, namely the `members`, `facilities`, and `bookings` tables.
-The first thing I did was examine the database dump using `vim clubdata.sql`. I saw that it did not specify any users, so I added my newly created user to the `.sql` dump
-
-```sql
-GRANT CONNECT ON DATABASE exercises TO paschalis;
-\c exercises
-CREATE SCHEMA cd;
-GRANT USAGE ON SCHEMA cd TO paschalis;
-REVOKE ALL PRIVILEGES ON SCHEMA PUBLIC FROM paschalis;
-```
-
-
-I then re-created the database from the `.sql` dump, using the superuser `postgres`
-
-```sql
-$ psql -U postgres -f clubdata.sql -x
-Password for user postgres: 
-CREATE DATABASE
-GRANT
-You are now connected to database "exercises" as user "postgres".
-CREATE SCHEMA
-GRANT
-REVOKE
-SET
-SET
-SET
-SET
-SET
-SET
-SET
-CREATE TABLE
-CREATE TABLE
-CREATE TABLE
-COPY 4044
-COPY 9
-COPY 31
-ALTER TABLE
-ALTER TABLE
-ALTER TABLE
-ALTER TABLE
-ALTER TABLE
-ALTER TABLE
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-CREATE INDEX
-ALTER DATABASE
-GRANT
-ANALYZE
-```
-
-
-
-So, in the initial `psql` "shell", I check for the existence of the initial user, the database, and examine the schema.
-```
-postgres-# \du
-
-                                    List of roles
-  Role name  |                         Attributes                         | Member of 
--------------+------------------------------------------------------------+-----------
- ........... | .......................................................... | ..........
- paschalis   | Password valid until infinity                              | {}
- ........... | .......................................................... | ..........
-
-
-
-postgres-# \l
-                                  List of databases
-   Name    |  Owner   | Encoding |   Collate   |    Ctype    |   Access privileges   
------------+----------+----------+-------------+-------------+-----------------------
- ......... | ........ | ........ | ........... | ........... | ......................
- exercises | postgres | UTF8     | en_US.UTF-8 | en_US.UTF-8 | =Tc/postgres         +
-           |          |          |             |             | postgres=CTc/postgres+
-           |          |          |             |             | paschalis=c/postgres
- ......... | ........ | ........ | ........... | ........... | ......................
-
-postgres=# \c exercises
-You are now connected to database "exercises" as user "postgres".
-
-exercises=# SELECT table_schema,table_name
-FROM information_schema.tables
-ORDER BY table_schema,table_name;
-
-
-    table_schema    |              table_name               
---------------------+---------------------------------------
- cd                 | bookings
- cd                 | facilities
- cd                 | members
- information_schema | administrable_role_authorizations
- information_schema | applicable_roles
- information_schema | attributes
- .................. | ....................................
- .................. | ....................................
- .................. | ....................................
- pg_catalog         | pg_user
- pg_catalog         | pg_user_mapping
- pg_catalog         | pg_user_mappings
- pg_catalog         | pg_views
-(191 rows)
-```
-
-To remove the restrictions on transactions and grant write privileges, you should, and so that other users can access and modify the table, one can
-
-```sql
- grant all privileges on table cd.members to paschalis;
-ERROR:  cannot execute GRANT in a read-only transaction
-
- begin;
-BEGIN
- set transaction read write;
-SET
- alter database exercises set default_transaction_read_only = off;
-ALTER DATABASE
- commit;
-COMMIT
-
-  GRANT ALL PRIVILEGES ON TABLE cd.members TO paschalis;
-GRANT
-  GRANT ALL PRIVILEGES ON TABLE cd.facilities TO paschalis;
-GRANT
-  GRANT ALL PRIVILEGES ON TABLE cd.bookings TO paschalis;
-GRANT
-```
-
-
-The database has been recreated, and it all seems to be working okay! I can now just `psql -U paschalis -d exercises -x` from my shell to go on exploring the database!
 
 
 
