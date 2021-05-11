@@ -108,6 +108,19 @@ from cd.facilities;
 (9 rows)
 
 ```
+
+or
+
+```sql
+select name, facid
+	case when (monthlymaintenance > 100) then
+		'expensive'
+	else
+		'cheap'
+	end as cost
+	from cd.facilities;
+```
+
 The `AS` operator is *very* useful in labeling columns or expressions, not only for display purposes, but also for easy reference.
 
 
@@ -186,7 +199,7 @@ from cd.facilities inner join cd.bookings
 on facilities.facid = bookings.facid
 where facilities.name like 'Tennis C%' and
 bookings.starttime >= '2012-09-21' and bookings.starttime < '2012-09-22'
-order by bookings.startitme;
+order by bookings.starttime;
 ```
 
 
